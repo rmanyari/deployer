@@ -1,23 +1,13 @@
 package com.manyari.deployer
 
-import akka.actor.{ActorLogging, Props, ActorSystem, Actor}
+import akka.actor.{ActorLogging, Actor}
 import akka.cluster.Cluster
 import akka.cluster.ClusterEvent._
-import com.typesafe.config.ConfigFactory
 
 /**
-  * Created by Rodrigo Manyari on 1/31/2016.
+  * Created by rodrigo on 2/1/16.
   */
-class HelloActor extends Actor {
-
-  def receive = {
-    case "hello"  => println("Yo!")
-    case _        => println("woot, who are you?!")
-  }
-
-}
-
-class SimpleClusterListener extends Actor with ActorLogging {
+class ClusterListener extends Actor with ActorLogging {
 
   val cluster = Cluster(context.system)
 
@@ -40,15 +30,3 @@ class SimpleClusterListener extends Actor with ActorLogging {
   }
 
 }
-
-object Main extends App {
-
-  val config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + 5000)
-    .withFallback(ConfigFactory.load())
-
-  val system = ActorSystem("ClusterSystem", config)
-
-  system.actorOf(Props[SimpleClusterListener], name="ClusterListener")
-
-}
-
